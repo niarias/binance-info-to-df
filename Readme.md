@@ -10,16 +10,20 @@ Installation
 
 ## Installation
 
+```
 python -m venv venv
 source venv/bin/activate # On Windows use: .\venv\Scripts\activate
 
 pip install -r requirements.txt
+```
 
 ## Execution
 
 Once you have installed the required packages, you can execute the script as follows:
 
+```
 python main.py
+```
 
 ## Usage
 
