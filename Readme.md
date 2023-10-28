@@ -32,3 +32,13 @@ Upon execution, the script will fetch the 24-hour ticker data for the trading pa
 ## Customization
 
 To fetch data for trading pairs other than the default ones, modify the whitelist list in the script with the desired trading pairs.
+
+## Env example file
+
+```
+REDSHIFT_ENDPOINT=my_endpoint
+REDSHIFT_PORT=5439
+REDSHIFT_USER=my_user
+REDSHIFT_PASSWD=my_password
+REDSHIFT_DATABASE=my_database
+```
