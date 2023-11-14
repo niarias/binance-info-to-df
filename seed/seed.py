@@ -1,7 +1,9 @@
 import psycopg2
 import os
 from dotenv import load_dotenv
-
+from const.data import whitelist, exchanges
+from helpers.utils import connect_to_db, load_to_sql
+import pandas as pd
 # Load the .env file
 load_dotenv()
 
@@ -12,10 +14,11 @@ REDSHIFT_USER = os.getenv('REDSHIFT_USER')
 REDSHIFT_PASSWD = os.getenv('REDSHIFT_PASSWD')
 REDSHIFT_DATABASE = os.getenv('REDSHIFT_DATABASE')
 
+
 def create_tables():
     # Form the connection string
     conn_string = f"dbname='{REDSHIFT_DATABASE}' port='{REDSHIFT_PORT}' user='{REDSHIFT_USER}' password='{REDSHIFT_PASSWD}' host='{REDSHIFT_ENDPOINT}'"
-    
+
     # Connect to Redshift
     with psycopg2.connect(conn_string) as conn:
         with conn.cursor() as cur:
@@ -34,7 +37,7 @@ def create_tables():
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS nicolas_ezequiel_arias300_coderhouse.prices(
                     ticker VARCHAR(10) NOT NULL,
-                    date DATE NOT NULL distkey,
+                    date DATETIME NOT NULL distkey,
                     qty_low FLOAT NOT NULL,
                     high FLOAT NOT NULL,
                     low FLOAT NOT NULL,
@@ -55,8 +58,23 @@ def create_tables():
                 SORTKEY (name);
             """)
             print("exchanges table created successfully!")
-    
+
     conn.close()
+
+
+def insert_coin_into_db():
+    df = pd.DataFrame(whitelist)
+    engine = connect_to_db()
+    load_to_sql(df, "dim_coins", engine)
+
+
+def insert_exchange_into_db():
+    df = pd.DataFrame(exchanges)
+    engine = connect_to_db()
+    load_to_sql(df, "dim_exchanges", engine)
+
 
 if __name__ == '__main__':
     create_tables()
+    insert_coin_into_db()
+    insert_exchange_into_db()
