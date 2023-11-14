@@ -16,10 +16,10 @@ SORTKEY(name);
 
 
 CREATE TABLE IF NOT EXISTS nicolas_ezequiel_arias300_coderhouse.fact_crypto_trading (
-    trading_id VARCHAR(36) PRIMARY KEY,,
+    trading_id VARCHAR(100) PRIMARY KEY,,
     coin_id INT NOT NULL,
     exchange_id INT NOT NULL,
-    date_id INT NOT NULL DISTKEY,
+    date_id VARCHAR(100) NOT NULL DISTKEY,
     qty_low FLOAT NOT NULL,
     high FLOAT NOT NULL,
     low FLOAT NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS nicolas_ezequiel_arias300_coderhouse.fact_crypto_trad
 COMPOUND SORTKEY(coin_id, exchange_id, date_id);
 
 CREATE TABLE IF NOT EXISTS nicolas_ezequiel_arias300_coderhouse.dim_date (
-    date_id VARCHAR(36) PRIMARY KEY,
+    date_id VARCHAR(100) PRIMARY KEY,
     date DATETIME NOT NULL,
     day INT NOT NULL,
     month INT NOT NULL,

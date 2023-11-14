@@ -51,15 +51,5 @@ def load_to_sql(df, table_name, engine, if_exists="replace"):
         logging.error(f"Error al cargar los datos en la base de datos: {e}")
 
 
-def generate_date_hash(date, ticker):
-    # Combine the date and ticker into a single string
-    combined_string = f"{date}-{ticker}"
-
-    # Encode the combined string to a byte format as hashlib requires byte input
-    encoded_string = combined_string.encode()
-
-    # Generate a SHA-256 hash of the encoded string
-    hash_object = hashlib.sha256(encoded_string)
-
-    # Return the hexadecimal representation of the hash
-    return hash_object.hexdigest()
+def generate_hash(value):
+    return hashlib.sha256(value.encode()).hexdigest()
