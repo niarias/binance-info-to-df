@@ -48,28 +48,57 @@ def create_tables():
 
             # Create exchanges table
             cur.execute("""
-               CREATE TABLE IF NOT EXISTS nicolas_ezequiel_arias300_coderhouse.fact_crypto_trading (
-                    trading_id VARCHAR(36) PRIMARY KEY,,
-                    coin_id INT NOT NULL,
-                    exchange_id INT NOT NULL,
-                    date_id INT NOT NULL DISTKEY,
-                    qty_low FLOAT NOT NULL,
-                    high FLOAT NOT NULL,
-                    low FLOAT NOT NULL,
-                    qty_high FLOAT NOT NULL,
-                    volume FLOAT NOT NULL
-                )
-                COMPOUND SORTKEY(coin_id, exchange_id, date_id);
+                CREATE TABLE IF NOT EXISTS nicolas_ezequiel_arias300_coderhouse.fact_crypto_trading (
+                trading_id VARCHAR(100) PRIMARY KEY,,
+                coin_id INT NOT NULL,
+                exchange_id INT NOT NULL,
+                date VARCHAR(30) NOT NULL DISTKEY,
+                time VARCHAR(30) NOT NULL,
+                qty_low FLOAT NOT NULL,
+                high FLOAT NOT NULL,
+                low FLOAT NOT NULL,
+                qty_high FLOAT NOT NULL,
+                volume FLOAT NOT NULL,
+                exchange_trade_id VARCHAR(100) NOT NULL
+            )
+            COMPOUND SORTKEY(coin_id, exchange_id, date);
+            """)
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS nicolas_ezequiel_arias300_coderhouse.stg_crypto_trading (
+                trading_id VARCHAR(100) PRIMARY KEY,,
+                coin_id INT NOT NULL,
+                exchange_id INT NOT NULL,
+                date VARCHAR(30) NOT NULL DISTKEY,
+                time VARCHAR(30) NOT NULL,
+                qty_low FLOAT NOT NULL,
+                high FLOAT NOT NULL,
+                low FLOAT NOT NULL,
+                qty_high FLOAT NOT NULL,
+                volume FLOAT NOT NULL,
+                exchange_trade_id VARCHAR(100) NOT NULL
+            )
+            COMPOUND SORTKEY(coin_id, exchange_id, date);
             """)
             print("exchanges table created successfully!")
 
             cur.execute("""
                CREATE TABLE IF NOT EXISTS nicolas_ezequiel_arias300_coderhouse.dim_date (
-                    date_id VARCHAR(36) PRIMARY KEY,
-                    date DATETIME NOT NULL,
+                    date VARCHAR(100) PRIMARY KEY,
                     day INT NOT NULL,
                     month INT NOT NULL,
-                    year INT NOT NULL,
+                    year INT NOT NULL
+                )
+                DISTSTYLE ALL 
+                SORTKEY(date);
+            """)
+            print("exchanges table created successfully!")
+
+            cur.execute("""
+               CREATE TABLE IF NOT EXISTS nicolas_ezequiel_arias300_coderhouse.stg_dim_dates (
+                    date VARCHAR(100) PRIMARY KEY,
+                    day INT NOT NULL,
+                    month INT NOT NULL,
+                    year INT NOT NULL
                 )
                 DISTSTYLE ALL 
                 SORTKEY(date);

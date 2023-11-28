@@ -1,6 +1,6 @@
 import pandas as pd
 from api.binance import get_24hr_ticker
-from helpers.utils import connect_to_db, load_to_sql, generate_hash
+from helpers.utils import connect_to_db, insert_trades_without_duplicates, insert_dates_without_duplicates
 from const.data import whitelist, exchanges
 import uuid
 
@@ -37,9 +37,6 @@ def generate_df_date(df_original):
     dates_df['month'] = dates_df['date'].dt.month
     dates_df['year'] = dates_df['date'].dt.year
 
-    dates_df['date_id'] = dates_df['date'].dt.strftime('%Y-%m-%d')
-    dates_df['date_id'] = dates_df['date_id'].apply(generate_hash)
-
     return dates_df
 
 
@@ -50,11 +47,7 @@ def generate_df_trades(df_original):
         {coin['ticker']: coin['coin_id'] for coin in whitelist})
     # Generate a new uuid
     df['trading_id'] = [str(uuid.uuid4()) for _ in range(len(df))]
-    df['date_id'] = df['date']
-    df['date_id'] = df['date_id'].apply(generate_hash)
 
-    # Remove date column
-    df.drop(columns=['date'], inplace=True)
     # Remove column ticker
     df.drop(columns=['ticker'], inplace=True)
 
@@ -69,9 +62,8 @@ def insert_into_db():
         df_dates = generate_df_date(df)
         df_trades = generate_df_trades(df)
 
-        load_to_sql(df_dates, "dim_dates", engine, if_exists="append")
-        load_to_sql(df_trades, "fact_crypto_trading",
-                    engine, if_exists="append")
+        insert_trades_without_duplicates(engine, df_trades)
+        insert_dates_without_duplicates(engine, df_dates)
 
 
 if __name__ == "__main__":

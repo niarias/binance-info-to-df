@@ -1,6 +1,7 @@
 import requests
 from api.mapper.data_mapper import DataMapper
 
+
 def get_24hr_ticker(symbol):
     base_url = "https://api.binance.com/api/v3/ticker/24hr"
     params = {
@@ -37,8 +38,3 @@ def get_binance_pairs(whitelist):
                 whitelisted_pairs.append(base_asset + quote_asset)
 
     return whitelisted_pairs
-
-
-
-
-
